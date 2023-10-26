@@ -5,6 +5,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AgentStats } from './entities/agent.stat.entity';
 import { MapStats } from './entities/map.stat.entity';
 import { MapAgentStats } from './entities/map-agent.stat.entity';
+import { InfoService } from '../info/info.service';
 import { InfoModule } from '../info/info.module';
 import { DifficultyModule } from '../difficulty/difficulty.module';
 

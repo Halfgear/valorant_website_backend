@@ -22,5 +22,11 @@ export class InfoController {
         const result = await this.InfoService.getAllMaps();
         return result;
     }
+
+    @Get('difficulty')
+    async getAllDifficulty() {
+        const result = await this.InfoService.getAllDifficulty();
+        return result;
+    }
 }
 

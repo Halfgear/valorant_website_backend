@@ -1,57 +1,61 @@
-// leaderboard.service.ts
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { RegionNameId } from 'src/enums/region.enum';
+import { Tier } from 'src/enums/tier.enum';
 import { Repository } from 'typeorm';
-import { paginate, PaginateQuery } from 'nestjs-paginate';
-import { PlayerLeaderboard } from './entities/player.leaderboard.entity';
-import { RegionNameId } from './enums/region.enum';
+import { Leaderboard } from './entities/leaderboard.entity';
+type rsoCheck = { found: boolean; isRSOed?: boolean; };
 
 @Injectable()
 export class LeaderboardService {
     constructor(
-        @InjectRepository(PlayerLeaderboard)
-        private playerLeaderboardRepository: Repository<PlayerLeaderboard>,
+        @InjectRepository(Leaderboard)
+        private leaderboardRepository: Repository<Leaderboard>,
     ) { }
-    async getRankers(query: PaginateQuery, region: string): Promise<any> {
+
+    async getRankers(page: number, region: string): Promise<any> {
         const regionId: number = RegionNameId[region];
-        const dateId = (
-            await this.playerLeaderboardRepository.find({
-                select: {
-                    dateId: true,
-                },
-                order: {
-                    dateId: 'DESC',
-                },
-                where: {
-                    regionId: regionId,
-                },
-                take: 1,
-            })
-        )[0].dateId;
-        const whereOption = {
-            regionId: regionId,
-            dateId,
-        };
-        let res = await paginate(query, this.playerLeaderboardRepository, {
-            sortableColumns: ['rank'],
-            select: [
-                'gameName',
-                'tagLine',
-                'profileId',
-                'rank',
-                'rating',
-                'tier',
-                'isRSOed',
-                'wins',
-                'losses',
-                'mainPositionId',
-                'mainAgentIds',
-                'averageCombatScore',
-            ],
-            defaultSortBy: [['rank', 'ASC']],
-            defaultLimit: 50,
-            where: whereOption,
+
+        if (page < 1 || page > 4) {
+            throw new Error('Invalid page number');
+        }
+
+        const rankStart = (page - 1) * 50 + 1;
+        const rankEnd = page * 50;
+
+        const queryBuilder = this.leaderboardRepository
+            .createQueryBuilder('playerLeaderboard')
+            .leftJoinAndSelect('playerLeaderboard.player', 'player')
+            .leftJoinAndSelect('player.playerStat', 'playerStat')
+            .where('player.regionId = :regionId', { regionId })
+            .andWhere('playerLeaderboard.rank BETWEEN :rankStart AND :rankEnd', { rankStart, rankEnd })
+            .orderBy('playerLeaderboard.rank', 'ASC')
+            .select([
+                'player.playerId',
+                'player.gameName',
+                'player.tagLine',
+                'player.isRSOed',
+                'player.tier',
+                'player.level',
+                'player.playerCardId',
+                'playerLeaderboard.rank',
+                'playerLeaderboard.rating',
+                'playerLeaderboard.mainPosition',
+                'playerLeaderboard.mainAgentIds',
+                'playerStat.averageCombatScore',
+                'playerStat.win',
+                'playerStat.lose',
+                'playerStat.draw'
+            ]);
+
+        const result = await queryBuilder.getMany();
+
+        // Transform the result, for example converting tier enums to strings
+        result.forEach((player: any) => {
+            player.tier = Tier[player.tier];
         });
-        return res
+
+        return result;
     }
+
 }

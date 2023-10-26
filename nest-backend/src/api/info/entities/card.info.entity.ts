@@ -5,13 +5,13 @@ import {
     PrimaryGeneratedColumn,
   } from 'typeorm';
 
-@Entity('spray_info', { schema: 'public' })
-export class SprayInfo {
+@Entity('card_info', { schema: 'public' })
+export class CardInfo {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @Column('character varying', { name: 'spray_id', length: 46, unique: true })
-    sparyId: string;
+    @Column('character varying', { name: 'card_id', length: 46, unique: true })
+    cardId: string;
   
     @Column('character varying', { name: 'name_kr', length: 256 })
     nameKr: string;

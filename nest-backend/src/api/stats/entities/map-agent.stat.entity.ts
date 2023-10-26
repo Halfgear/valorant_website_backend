@@ -1,3 +1,4 @@
+import { Tier } from 'src/enums/tier.enum';
 import {
   Entity,
   PrimaryGeneratedColumn,
@@ -6,11 +7,11 @@ import {
   JoinColumn,
   Index
 } from 'typeorm';
-import { Tier } from '../enums/tier.enum';
 import { AgentStats } from './agent.stat.entity';
 import { MapStats } from './map.stat.entity';
 
-@Index(["tier", "psScore"])
+@Index(["psScore"])
+@Index(["tier"])
 @Entity('map_agent_stats')
 export class MapAgentStats {
   @PrimaryGeneratedColumn()

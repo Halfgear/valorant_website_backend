@@ -8,7 +8,6 @@ import {
   import { MapAgentStats } from './map-agent.stat.entity';
   
   @Entity('map_stats', { schema: 'public' })
-  @Index(['name'])
   export class MapStats {
     @PrimaryGeneratedColumn()
     id: number;
@@ -22,10 +21,10 @@ import {
     @OneToMany(() => MapAgentStats, (ams) => ams.map)
     agentStats: MapAgentStats[];
 
-    @Column({ type: 'real' })
+    @Column({ name: 'def_win_rate', type: 'real', default:0 })
     defWinRate: number;
 
-    @Column({ type: 'real' })
+    @Column({ name: 'atk_win_rate', type: 'real', default:0 })
     atkWinRate: number;
   }
   

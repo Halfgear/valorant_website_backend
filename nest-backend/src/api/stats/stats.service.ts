@@ -1,12 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { PSTier } from 'src/enums/ps.tier.enum';
 import { In, Repository } from 'typeorm';
 import { DifficultyService } from '../difficulty/difficulty.service';
 import { InfoService } from '../info/info.service';
 import { AgentStats } from './entities/agent.stat.entity';
 import { MapAgentStats } from './entities/map-agent.stat.entity';
 import { MapStats } from './entities/map.stat.entity';
-import { Tier } from './enums/tier.enum';
 
 type AgentStat = {
     pickRate: number;
@@ -52,7 +52,7 @@ export class StatsService {
     }
     async getAgentsStatsByMapTier(mapName: string, tier: string) {
         //스트링 티어를 enum으로 변경
-        const tierValue = Tier[tier as keyof typeof Tier];
+        const tierValue = PSTier[tier as keyof typeof PSTier];
 
         const result = await this.mapAgentRepository
             .createQueryBuilder('mapAgent')

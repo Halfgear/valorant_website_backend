@@ -28,6 +28,7 @@ The NestJS backend serves the data for [this website](https://prod.valps.gg/) wi
 - **0.2**: Added NestJS Backend Project
 - **0.3**: Added data aggregator using psycopg2
 - **0.4**: Multiple pipe lines are implemented in crawler
+- **0.5**: NestJS also uses MongoDB now
 
 ## Authors
 - [@HwiJoon Lee](https://jooncode.com/)
