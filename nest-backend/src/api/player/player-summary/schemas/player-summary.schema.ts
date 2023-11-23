@@ -4,6 +4,7 @@ import mongoose from 'mongoose';
 
 interface GameSummary {
     match_id: string;
+    queue_id: string;
     character_id: string;
     map_id: string;
     position: string;
@@ -14,6 +15,8 @@ interface GameSummary {
     average_combat_score: number;
     timestamp: number;
     playtimeMilis: number;
+    roundsWon: number;
+    roundsLost: number;
 }
 
 interface PlayerStat {
@@ -24,6 +27,14 @@ interface PlayerStat {
     bombDefused: number;
     bombPlanted: number;
     clutchCount: number;
+    clutchVS1: number;
+    clutchVS2: number;
+    clutchVS3: number;
+    clutchVS4: number;
+    clutchVS5: number;
+    tradeKills: number;
+    tradedDeaths: number;
+    roundsPlayed: number;
     kills: number;
     deaths: number;
     assists: number;
@@ -38,13 +49,16 @@ interface PlayerStat {
     playtimeMills: number;
 }
 
-@Schema({ collection: 'player_summary' })
+@Schema({ collection: 'summary' })
 export class PlayerSummary {
     @Prop()
     _id: string;
 
     @Prop()
     puuid: string;
+
+    @Prop()
+    region: string;
 
     @Prop()
     player_name: string;

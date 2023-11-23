@@ -11,6 +11,12 @@ export class InfoController {
         return result;
     }
 
+    @Get('positionId')
+    async getPositionId() {
+        const result = await this.InfoService.getPositionId();
+        return result;
+    }
+
     @Get('rotationMapId')
     async getMapIdInRotation() {
         const result = await this.InfoService.getMapsInRotation();

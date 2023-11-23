@@ -34,6 +34,16 @@ export class InfoService {
     return ret
   }
 
+  async getPositionId() {
+    const ret = await this.agentInfoRepository.find({
+      select: {
+        agentId: true,
+        positionId: true
+      },
+    });
+    return ret
+  }
+
 
   async getAgentName() {
     const ret = await this.agentInfoRepository.find();
